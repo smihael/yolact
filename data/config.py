@@ -173,6 +173,7 @@ pascal_sbd_dataset = dataset_base.copy({
 })
 
 
+
 # ----------------------- TRANSFORMS ----------------------- #
 
 resnet_transform = Config({
@@ -822,3 +823,47 @@ def set_dataset(dataset_name:str):
     """ Sets the dataset of the current config. """
     cfg.dataset = eval(dataset_name)
     
+
+
+
+kolektor_dataset_test = dataset_base.copy({
+  'name': 'kolektor_dataset_test',
+  'train_info': '/dataset/coco/train.json',
+  'train_images': '/dataset/coco/',
+  'valid_info': '/dataset/coco/test.json',
+  'valid_images': '/dataset/coco/',
+  'class_names': ('copper', 'screw'),
+  'label_map': { 1: 2, 2: 1}
+})
+
+
+kolektor_config_test = yolact_resnet50_config.copy({
+    'name': 'kolektor_config_test',
+    # Dataset stuff
+    'dataset': kolektor_dataset_test,
+    'num_classes': len(kolektor_dataset_test.class_names) + 1,
+
+    # Image Size
+    'max_size': 300,
+})
+
+import yaml
+import os.path as osp
+
+dataset_path=osp.join(osp.dirname(__file__),'dataset.yaml')
+config_path=osp.join(osp.dirname(__file__),'config.yaml')
+
+try:
+    with open(dataset_path) as f:
+        ds = yaml.load(f,Loader=yaml.FullLoader)
+        dynamic_dataset = dataset_base.copy(ds)
+except:
+    print("Dynamic dataset is not given")
+
+try:
+    with open(config_path) as f:
+        cnf = yaml.load(f,Loader=yaml.FullLoader)
+        dynamic_config = yolact_resnet50_config.copy(cnf)
+except:
+    print("Dynamic config is not given")
+
