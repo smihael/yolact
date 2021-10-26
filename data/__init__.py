@@ -1,4 +1,5 @@
-from .config import *
+#from .config import *
+from .config_loader import *
 from .coco import COCODetection, COCOAnnotationTransform, get_label_map
 
 import torch
